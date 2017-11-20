@@ -48,20 +48,6 @@ def create_labeled_feature_dataset():
          image = 'data/triangle/' + str(image)
          features = extract_features(image)
          feature_training_dataset.append([features, np.array(triangle)])          
-
-    #iterate over leaf folder (contains leaf images)
-    # for image in os.listdir('leafs/'): 
-    #     image = 'leafs/' + str(image)
-    #     features = extract_features(image)
-    #     feature_training_dataset.append([features, np.array([1])])
-    # #iterate over other folder (contains non-leaf images)    
-    # for image in os.listdir('other/'): 
-    #     image = 'other/' + str(image)
-    #     features = extract_features(image)
-    #     feature_training_dataset.append([features, np.array([0])])   
-    #shuffles the numpy array (randomizes the order)   
-
-
     np.random.shuffle(feature_training_dataset)     
     return feature_training_dataset    
 
@@ -75,6 +61,12 @@ def create_cnn_model():
     cnn = max_pool_2d(cnn, 2)
     cnn = conv_2d(cnn, 64, 2, activation = "relu")
     cnn = max_pool_2d(cnn, 2)
+    cnn = fully_connected(cnn, 1024, activation = "relu")
+    cnn = dropout(cnn, 0.8)
+    cnn = fully_connected(cnn, 1024, activation = "relu")
+    cnn = dropout(cnn, 0.8)
+    cnn = fully_connected(cnn, 1024, activation = "relu")
+    cnn = dropout(cnn, 0.8)
     cnn = fully_connected(cnn, 1024, activation = "relu")
     cnn = dropout(cnn, 0.8)
     cnn = fully_connected(cnn, 1024, activation = "relu")
@@ -107,12 +99,22 @@ y = np.array([i[1] for i in training_data])
 test_x = np.array([i[0] for i in testing_data]).reshape(-1, 35, 35, 1)
 test_y = np.array([i[1] for i in testing_data])
 
-cnn.fit(x, y, n_epoch=10, validation_set=(test_x,test_y), snapshot_step=500, show_metric=True, run_id='leaf')
+cnn.fit(x, y, n_epoch=5, validation_set=(test_x,test_y), snapshot_step=500, show_metric=True, run_id='shapes')
 
-cnn.save('cnn.tflearn')
+cnn.save('shapes')
 
 image = 'data/circle/1.png'
 image_features = extract_features(image)
 data = image_features.reshape(35, 35, 1)
 prediction = cnn.predict([data])
-print(np.argmax(prediction))
+
+if(np.argmax(prediction) == 0 ):
+    print('This is a square!')
+elif(np.argmax(prediction) == 1 ):
+    print('This is a circle!')   
+elif(np.argmax(prediction) == 2 ):
+    print('This is a triangle!') 
+elif(np.argmax(prediction) == 3 ):
+    print('This is a star!')      
+else:
+    print('This is not a square, circle, triangle or square!')          
