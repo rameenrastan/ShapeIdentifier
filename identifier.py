@@ -1,7 +1,7 @@
 import os
 import tensorflow as tf
 import tflearn
-from tflearn.layers.core import dropout, fully_connected, input_data
+from tflearn.layers.core import fully_connected, input_data, dropout
 import numpy as np
 import cv2
 from tflearn.layers.conv import conv_2d, max_pool_2d
@@ -79,28 +79,43 @@ training_feature_dataset = create_labeled_feature_dataset()
 
 # define our convolutional neural network model using tensorflow and tflearn
 def create_cnn_model():
+    #input layer (used to input our training data)
     cnn = input_data(shape=[None, image_size, image_size, 1], name="input")
+    #2d convolutional layer
     cnn = conv_2d(cnn, 32, 2, activation="relu")
     cnn = max_pool_2d(cnn, 2)
+    #2d convolutional layer
     cnn = conv_2d(cnn, 64, 2, activation="relu")
     cnn = max_pool_2d(cnn, 2)
+    #2d convolutional layer
+    cnn = conv_2d(cnn, 64, 2, activation="relu")
+    cnn = max_pool_2d(cnn, 2)
+    #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.8)
+    cnn = dropout(cnn, 0.5)
+    #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.8)
+    cnn = dropout(cnn, 0.5)
+    #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.8)
+    cnn = dropout(cnn, 0.5)
+    #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.8)
+    cnn = dropout(cnn, 0.5)
+    #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.8)
+    cnn = dropout(cnn, 0.5)
+    #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.8)
+    cnn = dropout(cnn, 0.5)
+    #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.8)
+    cnn = dropout(cnn, 0.5)
+    #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
     cnn = fully_connected(cnn, 4, activation="softmax")
-    cnn = regression(cnn, optimizer="adam", learning_rate=0.001, loss="categorical_crossentropy")
+    #regression layer: default optimizer: adam, default loss function: categorical cross entropy
+    cnn = regression(cnn)
     return cnn
 
 # instantiate our model using tflearn
@@ -111,16 +126,16 @@ if os.path.exists(model + '.meta'):
     cnn.load(model)
 #if our trained model doesn't exist, train the model and save it    
 else:
-    training_data = training_feature_dataset[:-250]
-    testing_data = training_feature_dataset[-250:]
+    training_dataset = training_feature_dataset[:-250]
+    validation_dataset = training_feature_dataset[-250:]
 
-    x = np.array([i[0] for i in training_data]).reshape(-1, image_size, image_size, 1)
-    y = np.array([i[1] for i in training_data])
+    feature_list = np.array([feature_set[0] for feature_set in training_dataset]).reshape(-1, image_size, image_size, 1)
+    label_list = np.array([label[1] for label in training_dataset])
 
-    test_x = np.array([i[0] for i in testing_data]).reshape(-1, image_size, image_size, 1)
-    test_y = np.array([i[1] for i in testing_data])
+    validation_feature_list = np.array([feature_set[0] for feature_set in validation_dataset]).reshape(-1, image_size, image_size, 1)
+    validation_label_list = np.array([label[1] for label in validation_dataset])
 
-    cnn.fit(x, y, n_epoch=3, validation_set=(test_x, test_y), snapshot_step=500, show_metric=True, run_id=model)
+    cnn.fit(feature_list, label_list, n_epoch=3, validation_set=(validation_feature_list, validation_label_list), snapshot_step=500, show_metric=True, run_id=model)
 
     cnn.save(model)
 
