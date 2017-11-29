@@ -19,7 +19,7 @@ star = [0, 0, 0, 1]
 image_size = 35
 
 #name of our convolutional neural network model when saving as file
-model = 'shapeClassifer'
+model = 'shapeClassifer2'
 
 #dataset directory
 dataset_directory = 'data/'
@@ -85,7 +85,13 @@ def create_cnn_model():
     cnn = conv_2d(cnn, 32, 2, activation="relu")
     cnn = max_pool_2d(cnn, 2)
     #2d convolutional layer
-    cnn = conv_2d(cnn, 64, 2, activation="relu")
+    cnn = conv_2d(cnn, 32, 2, activation="relu")
+    cnn = max_pool_2d(cnn, 2)
+    #2d convolutional layer
+    cnn = conv_2d(cnn, 32, 2, activation="relu")
+    cnn = max_pool_2d(cnn, 2)
+    #2d convolutional layer
+    cnn = conv_2d(cnn, 32, 2, activation="relu")
     cnn = max_pool_2d(cnn, 2)
     #2d convolutional layer
     cnn = conv_2d(cnn, 64, 2, activation="relu")
@@ -93,24 +99,24 @@ def create_cnn_model():
     #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
     cnn = dropout(cnn, 0.5)
-    #fully connected layer
-    cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.5)
-    #fully connected layer
-    cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.5)
-    #fully connected layer
-    cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.5)
-    #fully connected layer
-    cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.5)
-    #fully connected layer
-    cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.5)
-    #fully connected layer
-    cnn = fully_connected(cnn, 512, activation="relu")
-    cnn = dropout(cnn, 0.5)
+    # #fully connected layer
+    # cnn = fully_connected(cnn, 512, activation="relu")
+    # cnn = dropout(cnn, 0.5)
+    # #fully connected layer
+    # cnn = fully_connected(cnn, 512, activation="relu")
+    # cnn = dropout(cnn, 0.5)
+    # #fully connected layer
+    # cnn = fully_connected(cnn, 512, activation="relu")
+    # cnn = dropout(cnn, 0.5)
+    # #fully connected layer
+    # cnn = fully_connected(cnn, 512, activation="relu")
+    # cnn = dropout(cnn, 0.5)
+    # #fully connected layer
+    # cnn = fully_connected(cnn, 512, activation="relu")
+    # cnn = dropout(cnn, 0.5)
+    # #fully connected layer
+    # cnn = fully_connected(cnn, 512, activation="relu")
+    # cnn = dropout(cnn, 0.5)
     #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
     cnn = fully_connected(cnn, 4, activation="softmax")
