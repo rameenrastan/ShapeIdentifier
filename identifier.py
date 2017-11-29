@@ -19,7 +19,7 @@ star = [0, 0, 0, 1]
 image_size = 35
 
 #name of our convolutional neural network model when saving as file
-model = 'shapeClassifer2'
+model = 'shapeClassifer4'
 
 #dataset directory
 dataset_directory = 'data/'
@@ -82,13 +82,13 @@ def create_cnn_model():
     #input layer (used to input our training data)
     cnn = input_data(shape=[None, image_size, image_size, 1], name="input")
     #2d convolutional layer
-    cnn = conv_2d(cnn, 32, 2, activation="relu")
+    cnn = conv_2d(cnn, 32, 5, activation="relu")
     cnn = max_pool_2d(cnn, 2)
     #2d convolutional layer
-    cnn = conv_2d(cnn, 32, 2, activation="relu")
+    cnn = conv_2d(cnn, 32, 5, activation="relu")
     cnn = max_pool_2d(cnn, 2)
     #2d convolutional layer
-    cnn = conv_2d(cnn, 32, 2, activation="relu")
+    cnn = conv_2d(cnn, 32, 5, activation="relu")
     cnn = max_pool_2d(cnn, 2)
     #2d convolutional layer
     cnn = conv_2d(cnn, 32, 2, activation="relu")
@@ -99,24 +99,6 @@ def create_cnn_model():
     #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
     cnn = dropout(cnn, 0.5)
-    # #fully connected layer
-    # cnn = fully_connected(cnn, 512, activation="relu")
-    # cnn = dropout(cnn, 0.5)
-    # #fully connected layer
-    # cnn = fully_connected(cnn, 512, activation="relu")
-    # cnn = dropout(cnn, 0.5)
-    # #fully connected layer
-    # cnn = fully_connected(cnn, 512, activation="relu")
-    # cnn = dropout(cnn, 0.5)
-    # #fully connected layer
-    # cnn = fully_connected(cnn, 512, activation="relu")
-    # cnn = dropout(cnn, 0.5)
-    # #fully connected layer
-    # cnn = fully_connected(cnn, 512, activation="relu")
-    # cnn = dropout(cnn, 0.5)
-    # #fully connected layer
-    # cnn = fully_connected(cnn, 512, activation="relu")
-    # cnn = dropout(cnn, 0.5)
     #fully connected layer
     cnn = fully_connected(cnn, 512, activation="relu")
     cnn = fully_connected(cnn, 4, activation="softmax")
@@ -141,7 +123,7 @@ else:
     validation_feature_list = np.array([feature_set[0] for feature_set in validation_dataset]).reshape(-1, image_size, image_size, 1)
     validation_label_list = np.array([label[1] for label in validation_dataset])
 
-    cnn.fit(feature_list, label_list, n_epoch=3, validation_set=(validation_feature_list, validation_label_list), snapshot_step=500, show_metric=True, run_id=model)
+    cnn.fit(feature_list, label_list, n_epoch=6, validation_set=(validation_feature_list, validation_label_list), snapshot_step=500, show_metric=True, run_id=model)
 
     cnn.save(model)
 
